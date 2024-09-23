@@ -10,7 +10,7 @@ class ObjectHandler:
 
         add_sprite(SpriteObject(game))
         add_sprite(SpriteObject(game, path=self.static_sprite_path + 'comum.png', pos=(1.5, 3), scale=1, shift=0))
-        add_sprite(SpriteObject(game, path=self.static_sprite_path + 'trash_can.png', pos=(3, 3), scale=.25, shift=0))
+        add_sprite(SpriteObject(game, path=self.static_sprite_path + 'trash_can.png', pos=(3, 3), scale=.5, shift=.5))
         add_sprite(AnimatedSprite(game))
         add_sprite(AnimatedSprite(game, pos=(1.5, 1.5)))
         add_sprite(AnimatedSprite(game, path=self.anim_sprite_path + 'red_light/0.png', pos=(20, 14.5)))
