@@ -1,4 +1,4 @@
-import pygame, math
+import pygame, math, time
 from settings import *
 
 class Player:
@@ -8,26 +8,50 @@ class Player:
         self.angle = PLAYER_ANGLE
         self.shot = False
         self.health = PLAYER_MAX_HEALTH
-    
+        self.rel = 0
+        self.e_pressed = False
+        self.healed_value = 0
+
+    def check_game_over(self):
+        if self.health < 1:
+            self.game.object_renderer.game_over()
+            pygame.display.flip()
+            pygame.time.delay(1500)
+            self.game.new_game()
+
     def get_damage(self, damage):
         self.health -= damage
         self.game.object_renderer.player_damage()
         self.game.sound.player_pain.play()
+        self.check_game_over()
 
     def single_fire_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1 and not self.shot and not self.game.weapon.reloading:
-                self.game.sound.shotgun.play()
-                self.shot = True
-                self.game.weapon.reloading = True
+        if not self.game.menu.button_clicked:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and not self.shot and not self.game.weapon.reloading:
+                    self.game.sound.shotgun.play()
+                    self.shot = True
+                    self.game.weapon.reloading = True
+
 
     def movement(self):
         sin_a = math.sin(self.angle)
         cos_a = math.cos(self.angle)
         dx, dy = 0, 0
-        speed = PLAYER_SPEED * self.game.delta_time
-        speed_sin = speed * sin_a
-        speed_cos = speed * cos_a
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LSHIFT]:
+                speed = 2 * PLAYER_SPEED * self.game.delta_time
+                speed_sin = speed * sin_a
+                speed_cos = speed * cos_a
+        elif keys[pygame.K_LCTRL]:
+            speed = .5 * PLAYER_SPEED * self.game.delta_time
+            speed_sin = speed * sin_a
+            speed_cos = speed * cos_a
+
+        else:
+            speed = PLAYER_SPEED * self.game.delta_time
+            speed_sin = speed * sin_a
+            speed_cos = speed * cos_a
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
@@ -45,10 +69,10 @@ class Player:
 
         self.check_wall_collision(dx, dy)
 
-        if keys[pygame.K_LEFT]:
-            self.angle -= PLAYER_ROT_SPEED * self.game.delta_time
-        if keys[pygame.K_RIGHT]:
-            self.angle += PLAYER_ROT_SPEED * self.game.delta_time
+        # if keys[pygame.K_LEFT]:
+        #     self.angle -= PLAYER_ROT_SPEED * self.game.delta_time
+        # if keys[pygame.K_RIGHT]:
+        #     self.angle += PLAYER_ROT_SPEED * self.game.delta_time
         self.angle %= math.tau
 
     def check_wall(self, x, y):
@@ -77,8 +101,9 @@ class Player:
         self.angle += self.rel * MOUSE_SENSITIVITY * self.game.delta_time
 
     def update(self):
-        self.movement()
-        self.mouse_control()
+        if not self.game.menu.button_clicked:
+            self.movement()
+            self.mouse_control()
 
     @property
     def pos(self):

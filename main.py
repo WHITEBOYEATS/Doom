@@ -9,6 +9,8 @@ from object_handler import *
 from weapon import *
 from sound import *
 from pathfinding import *
+from unique_sprite import *
+from menu import *
 
 
 class Game:
@@ -23,6 +25,8 @@ class Game:
         self.global_event = pygame.USEREVENT + 0
         pygame.time.set_timer(self.global_event, 40)
         self.new_game()
+        for i in range(1000):
+            pygame.mixer.music.play()
 
     def new_game(self):
         self.map = Map(self)
@@ -30,23 +34,22 @@ class Game:
         self.object_renderer = ObjectRendrer(self)
         self.raycasting = RayCasting(self)
         self.object_handler = ObjectHandler(self)
-        self.weapon = Weapon(self)
+        keys = pygame.key.get_pressed()
+        # self.weapon = Weapon(self)
+        self.weapon = Weapon(self, path= 'resources/sprites/weapon/hand/00.png', animation_time= 1, damage=100)
         self.sound = Sound(self)
         self.pathfinding = PathFinding(self)
+        self.menu = Menu(self)
 
     def update(self):
+        
         self.player.update()
         self.raycasting.update()
         self.object_handler.update()
         self.weapon.update()
         pygame.display.flip()
         # sets the clock speed the the settings frame rate
-        if self.clock.get_fps() > 60:
-            self.delta_time = self.clock.tick(FPS)
-        elif self.clock.get_fps() < 60:
-            self.delta_time = self.clock.tick(30)
-        else:
-            self.delta_time = self.clock.tick(FPS)
+        self.delta_time = self.clock.tick(FPS)
         pygame.display.set_caption(f'{self.clock.get_fps() :.1f}')
         
     def draw(self):
@@ -56,6 +59,7 @@ class Game:
         self.weapon.draw()
         # self.map.draw()
         # self.player.draw()
+        # self.menu.draw()
 
     def check_events(self):
         self.global_trigger = False
@@ -66,6 +70,16 @@ class Game:
                 sys.exit()
             elif event.type == self.global_event:
                 self.global_trigger = True
+            if (event.type == pygame.KEYDOWN and event.key == pygame.K_e): 
+                if self.player.health < PLAYER_MAX_HEALTH:
+                    self.player.health += 10
+                    self.e_pressed = False
+                    if self.player.health > PLAYER_MAX_HEALTH:
+                        self.player.health = PLAYER_MAX_HEALTH
+            
+            if (event.type == pygame.KEYDOWN and event.key == pygame.K_r):
+                self.new_game()
+            self.menu.check_opened(event)
             self.player.single_fire_event(event)
 
 
@@ -75,6 +89,8 @@ class Game:
             self.check_events()
             self.update()
             self.draw()
+
+
 
 if __name__ == '__main__':
     game = Game()

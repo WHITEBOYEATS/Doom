@@ -13,4 +13,9 @@ class Sound:
             self.player_pain = pygame.mixer.Sound(self.path + 'player_pain.wav')
             self.theme = pygame.mixer.music.load(self.path + 'theme.mp3')
         except:
-            self.shotgun = pygame.mixer.Sound('_internal/'+ self.path + 'shotgun.wav')
+            self.shotgun = pygame.mixer.Sound('_internal/' + self.path + 'shotgun.wav')
+            self.npc_pain = pygame.mixer.Sound('_internal/' + self.path + 'npc_pain.wav')
+            self.npc_death = pygame.mixer.Sound('_internal/' + self.path + 'npc_death.wav')
+            self.npc_shot = pygame.mixer.Sound('_internal/' + self.path + 'npc_attack.wav')
+            self.player_pain = pygame.mixer.Sound('_internal/' + self.path + 'player_pain.wav')
+            self.theme = pygame.mixer.music.load('_internal/' + self.path + 'theme.mp3')
