@@ -86,11 +86,11 @@ class Player:
         if self.check_wall(int(self.x), int(self.y + dy * scale)):
             self.y += dy
 
-    def draw(self):
+    # def draw(self):
         # pygame.draw.line(self.game.screen, 'yellow', (self.x * 100, self.y * 100),
         #                 (self.x * 100 + WIDTH * math.cos(self.angle),
         #                 self.y * 100 + WIDTH * math.sin(self.angle)), 2)
-        pygame.draw.circle(self.game.screen, 'green', (self.x * 100, self.y * 100), 15)
+        # pygame.draw.circle(self.game.screen, 'green', (self.x * 100, self.y * 100), 15)
 
     def mouse_control(self):
         mx, my = pygame.mouse.get_pos()

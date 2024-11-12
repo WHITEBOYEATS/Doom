@@ -39,6 +39,14 @@ class ObjectRendrer:
             self.game_over_image = self.get_texture('resources/textures/game_over.png', RES)
         except:
             self.game_over_image = self.get_texture('_internal/resources/textures/game_over.png', RES)
+        try:
+            self.pink = self.get_texture('resources/textures/pink_screen.png', RES)
+        except:
+            self.pink = self.get_texture('_internal/resources/textures/pink_screen.png', RES)
+        try:
+            self.weapons_side_bar = self.get_texture('resources/textures/weapons_side_bar.png', (250,500))
+        except:
+            self.weapons_side_bar = self.get_texture('_internal/resources/textures/weapons_side_bar.png', (250,500))
 
 
     def draw(self):
@@ -46,8 +54,14 @@ class ObjectRendrer:
         self.render_game_objects()
         self.draw_menu()
         self.screen.blit(self.border, (0, 0))
+        if self.game.weapon.current_weapon == 1:
+            pygame.draw.rect(self.screen, "gray", pygame.rect.Rect(25, 250, 95, 100), 1)
+        if self.game.weapon.current_weapon == 2:
+            pygame.draw.rect(self.screen, "gray", pygame.rect.Rect(25, 375, 95, 100), 1)
+        self.screen.blit(self.weapons_side_bar, (-50,250))
         self.draw_player_health()
         
+
 
     def draw_menu(self):
         self.game.menu.draw()
